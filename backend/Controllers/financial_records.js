@@ -6,18 +6,28 @@ exports.getUserFinancesByYear = async (req, res) => {
   const { userId, year } = req.params;
 
   try {
-    const [results] = await db
-      .promise()
-      .query(
-        "SELECT * FROM financial_record WHERE userId = ? AND YEAR = ?",
-        [userId, year]
-      );
+    const [results] = await db.promise().query(
+      `SELECT fr.*, u.name
+  FROM financial_record fr
+  LEFT JOIN users u ON fr.userId = u.id
+  WHERE fr.userId = ? AND fr.year = ?`,
+      [userId, year]
+    );
 
     if (results.length === 0) {
       return res.status(404).json({ message: "No records found" });
     }
+    const response = {
+      username: results[0]?.name || "Unknown",
+      year: year,
+      records: results.map(r => ({
+        month: r.month,
+        amount: r.amount,
+        record_id: r.record_id
+      }))
+    };
 
-    res.status(200).json(results);
+    res.status(200).json(response);
   } catch (err) {
     console.error("Database query failed:", err);
     res.status(500).json({ error: "Database query failed" });
@@ -42,7 +52,7 @@ exports.uploadFinancialRecords = async (req, res) => {
 
     // Bulk insert instead of looping for performance
     if (rows.length > 0) {
-      const values = rows.map((row) => [userId, year, row.month, row.amount]);
+      const values = rows.map((row) => [userId, year, row.Month, row.Amount]);
       await db
         .promise()
         .query(
