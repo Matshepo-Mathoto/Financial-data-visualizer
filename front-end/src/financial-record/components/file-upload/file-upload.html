@@ -1,0 +1,35 @@
+<div class="file-upload-container">
+  <div>
+    <input
+      type="file"
+      #fileInput
+      class="hidden"
+      (change)="onFileSelected($event)"
+      accept=".csv,.xlsx,.xls"
+    />
+    <div
+      class="upload-area border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-all"
+      [class.border-blue-500]="isDragOver"
+      [class.bg-blue-50]="isDragOver"
+      [class.border-gray-300]="!isDragOver"
+      [class.hover:border-blue-500]="!isDragOver"
+      [class.hover:bg-blue-50]="!isDragOver"
+      (click)="fileInput.click()"
+      (dragover)="onDragOver($event)"
+      (dragleave)="onDragLeave($event)"
+      (drop)="onDrop($event)"
+    >
+      <p class="text-lg">{{ fileName || 'No file uploaded yet.' }}</p>
+      <p class="text-sm text-gray-500">Click to upload or drag and drop</p>
+    </div>
+    <div class="flex justify-end">
+      <button
+        class="mt-4 w-1/8 px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+        (click)="submitFile()"
+        [disabled]="!file || isLoading"
+      >
+        {{ isLoading ? 'Processing...' : 'Submit' }}
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,19 @@
+<div>
+	<div class="overflow-x-auto">
+		<table class="min-w-full bg-white border border-gray-200 rounded-lg overflow-hidden">
+			<thead class="bg-gray-50">
+				<tr>
+					<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Month</th>
+					<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+				</tr>
+			</thead>
+			<tbody class="bg-white divide-y divide-gray-200">
+				<tr *ngFor="let record of records; let i = index" [class]="i % 2 === 0 ? 'bg-white' : 'bg-gray-50'">
+					<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ getMonthNameFn(record.month) }}</td>
+					<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">R{{ parseFloatFn(record.amount).toLocaleString() }}</td>
+
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
